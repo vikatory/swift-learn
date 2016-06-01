@@ -11,18 +11,28 @@ import UIKit
 @IBDesignable
 class FaceView: UIView {
     @IBInspectable
-    var scale: CGFloat = 0.90
+    var scale: CGFloat = 0.90 {didSet { setNeedsDisplay() } }
     @IBInspectable
-    var mouthCurvature: Double = 1.0  // 1 full smile, -1 full frown
+    var mouthCurvature: Double = 1.0  {didSet { setNeedsDisplay() } }  // 1 full smile, -1 full frown
     @IBInspectable
-    var eyeOpen: Bool = false
+    var eyeOpen: Bool = false  {didSet { setNeedsDisplay() } }
     @IBInspectable
-    var eyeBrowTilt: Double = 0.0  // -1 full furrow, 1 fully relaxed
+    var eyeBrowTilt: Double = 0.0  {didSet { setNeedsDisplay() } }  // -1 full furrow, 1 fully relaxed
     @IBInspectable
-    var color: UIColor = UIColor.blueColor()
+    var color: UIColor = UIColor.blueColor()  {didSet { setNeedsDisplay() } }
     @IBInspectable
-    var lineWidth: CGFloat = 5.0
-
+    var lineWidth: CGFloat = 5.0  {didSet { setNeedsDisplay() } }
+    
+    func changeScale(recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .Changed, .Ended:
+            scale *= recognizer.scale
+            recognizer.scale = 1.0
+        default:
+            break
+        }
+    }
+    
     private var skullRadius: CGFloat {
         return min(bounds.size.width, bounds.size.height) / 2
     }
